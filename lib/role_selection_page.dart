@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class RoleSelectionPage extends StatelessWidget {
@@ -16,32 +15,87 @@ class RoleSelectionPage extends StatelessWidget {
           ),
         ),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Select Role', style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 24),
-              _roleButton(context, 'People'),
-              const SizedBox(height: 12),
-              _roleButton(context, 'Admin'),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Select Your Role',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 40),
+                _roleButton(
+                  context,
+                  'People Dashboard',
+                  '/peopleDashboard',
+                  Icons.people,
+                  Colors.blue,
+                ),
+                const SizedBox(height: 20),
+                _roleButton(
+                  context,
+                  'Admin Dashboard',
+                  '/adminDashboard',
+                  Icons.admin_panel_settings,
+                  Colors.purple,
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _roleButton(BuildContext context, String title) {
-    return ElevatedButton(
+/// Enhanced role button with icon and color customization
+Widget _roleButton(
+    BuildContext context,
+    String role,
+    String route,
+    IconData icon,
+    Color color,
+    ) {
+  return SizedBox(
+    width: double.infinity,
+    height: 60,
+    child: ElevatedButton.icon(
+      onPressed: () {
+        // Add error handling for navigation
+        try {
+          Navigator.pushReplacementNamed(context, route);
+        } catch (e) {
+          // Show error if route doesn't exist
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error navigating to $role: Route not found'),
+              backgroundColor: Color.purple
+            ),
+          );
+        }
+      },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.purpleAccent,
-        side: const BorderSide(color: Colors.purpleAccent, width: 2),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+        backgroundColor: color,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        elevation: 5,
       ),
-      onPressed: () => Navigator.pushNamed(context, '/login'),
-      child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-    );
-  }
+      icon: Icon(icon, size: 24),
+      label: Text(
+        role,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ),
+  );
 }

@@ -3,19 +3,22 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:safe_zone/pages/home_page.dart';
-import 'package:safe_zone/providers/incident_provider.dart';
-
-import 'alerts_page.dart';
+import 'package:safe_zone/admin/pages/admin_dashboard.dart';
+import 'package:safe_zone/admin/providers/incident_provider.dart';
+import 'package:safe_zone/admin/pages/admin_alert.dart';
+import 'package:safe_zone/admin/pages/incident_detail_page.dart';
+import 'package:safe_zone/admin/pages/incident_list_page.dart';
+import 'package:safe_zone/admin/pages/incident_map_page.dart';
+import 'package:safe_zone/admin/pages/admin_notification.dart';
+import 'package:safe_zone/people/alerts_page.dart';
 import 'firebase_options.dart';
 import 'login_page.dart';
-import 'notifications_page.dart';
-import 'people_home_page.dart';
-import 'profile_page.dart';
-import 'report_incident_page.dart';
+import 'package:safe_zone/people/notifications_page.dart';
+import 'package:safe_zone/people/people_home_page.dart';
+import 'package:safe_zone/people/profile_page.dart';
+import 'package:safe_zone/people/report_incident_page.dart';
 import 'role_selection_page.dart';
 import 'signup_page.dart';
-
 
 // Background message handler must be a top-level function
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -37,7 +40,16 @@ void main() async {
   await setupFCM();
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  runApp(const DisasterApp());
+
+  // Fixed: Move MultiProvider setup to main() and call runApp only once
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => IncidentProvider()),
+      ],
+      child: const DisasterApp(),
+    ),
+  );
 }
 
 // Move setupFCM outside of main() as a separate function
@@ -59,12 +71,9 @@ Future<void> setupFCM() async {
       print("Received a foreground message: ${message.notification?.title}");
     }
   });
-
-  runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => IncidentProvider() )],
-    child: const DisasterApp(),
-  ));
 }
+
+
 
 class DisasterApp extends StatelessWidget {
   const DisasterApp({super.key});
@@ -90,13 +99,14 @@ class DisasterApp extends StatelessWidget {
         '/': (_) => const RoleSelectionPage(),
         '/login': (_) => const LoginPage(),
         '/signup': (_) => const SignUpPage(),
+        //People
         '/peopleDashboard': (_) => const PeopleHomePage(),
-        '/adminDashboard': (_) => const AdminDashboard(),
         '/report': (_) => const ReportIncidentPage(),
         '/reportIncident': (_) => const ReportIncidentPage(),
         '/profile': (_) => const ProfilePage(),
         '/alerts': (_) => const AlertsPage(),
         '/notifications': (_) => const NotificationsPage(),
+        '/adminDashboard': (_) => const AdminDashboard(),
       },
     );
   }
