@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/incident_provider.dart';
+import 'package:safe_zone/services/communications.dart'; // ✅ Communication services
 
 class IncidentDetailPage extends StatelessWidget {
   final String incidentId;
@@ -30,21 +31,96 @@ class IncidentDetailPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Location: ${inc.location}', style: const TextStyle(color: Colors.white, fontSize: 16)),
+              Text('Location: ${inc.location}',
+                  style: const TextStyle(color: Colors.white, fontSize: 16)),
               const SizedBox(height: 6),
-              Text('Reported by: ${inc.reporter}', style: const TextStyle(color: Colors.white70)),
+              Text('Reported by: ${inc.reporter}',
+                  style: const TextStyle(color: Colors.white70)),
               const SizedBox(height: 12),
-              Text(inc.description, style: const TextStyle(color: Colors.white70)),
+              Text(inc.description,
+                  style: const TextStyle(color: Colors.white70)),
               const SizedBox(height: 20),
+
+              /// status buttons
               Row(
                 children: [
-                  _StatusBtn(label:'Pending', selected: inc.status=='Pending', onTap: ()=> context.read<IncidentProvider>().updateStatus(inc.id, 'Pending')),
+                  _StatusBtn(
+                      label: 'Pending',
+                      selected: inc.status == 'Pending',
+                      onTap: () {
+                        context.read<IncidentProvider>().updateStatus(inc.id, 'Pending');
+                        sendSMS("+911234567890", "Incident ${inc.id} marked Pending");
+                      }),
                   const SizedBox(width: 8),
-                  _StatusBtn(label:'In Progress', selected: inc.status=='In Progress', onTap: ()=> context.read<IncidentProvider>().updateStatus(inc.id, 'In Progress')),
+                  _StatusBtn(
+                      label: 'In Progress',
+                      selected: inc.status == 'In Progress',
+                      onTap: () {
+                        context.read<IncidentProvider>().updateStatus(inc.id, 'In Progress');
+                        sendSMS("+911234567890", "Incident ${inc.id} In Progress");
+                      }),
                   const SizedBox(width: 8),
-                  _StatusBtn(label:'Resolved', selected: inc.status=='Resolved', onTap: ()=> context.read<IncidentProvider>().updateStatus(inc.id, 'Resolved')),
+                  _StatusBtn(
+                      label: 'Resolved',
+                      selected: inc.status == 'Resolved',
+                      onTap: () {
+                        context.read<IncidentProvider>().updateStatus(inc.id, 'Resolved');
+                        sendSMS("+911234567890", "Incident ${inc.id} Resolved ✅");
+                      }),
                 ],
               ),
+
+              const Spacer(),
+
+              /// 🚨 Communication buttons
+              Center(
+                child: Column(
+                  children: [
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      onPressed: () async {
+                        try {
+                          await provider.submitIncident(inc);
+                          await sendSMS("+911234567890", "📡 New incident reported: ${inc.title}");
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("✅ Incident reported & broadcasted"),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("❌ Failed: $e"),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      },
+                      icon: const Icon(Icons.send, color: Colors.white),
+                      label: const Text(
+                        "Report & Broadcast",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed: () => callHelpline("+911234567890"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                      ),
+                      icon: const Icon(Icons.call, color: Colors.white),
+                      label: const Text("Call Helpline", style: TextStyle(color: Colors.white)),
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ),

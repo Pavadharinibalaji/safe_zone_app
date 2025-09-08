@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import '../widgets/sidebar.dart';
 
-class NotificationsPage extends StatefulWidget {
-  const NotificationsPage({super.key});
+class AdminNotification extends StatefulWidget {
+  const AdminNotification({super.key});
 
   @override
-  State<NotificationsPage> createState() => _NotificationsPageState();
+  State<AdminNotification> createState() => _AdminNotificationState();
 }
 
-class _NotificationsPageState extends State<NotificationsPage> {
+class _AdminNotificationState extends State<AdminNotification> {
   final TextEditingController _searchController = TextEditingController();
 
   final List<Map<String, String>> _notifications = [
@@ -22,83 +23,104 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredNotifications = _notifications.where((notification) {
-      final title = notification["title"]!.toLowerCase();
-      final status = notification["status"]!.toLowerCase();
-      final query = _searchText.toLowerCase();
-      return title.contains(query) || status.contains(query);
+    final filteredNotifications = _notifications.where((item) {
+      return item["title"]!.toLowerCase().contains(_searchText.toLowerCase()) ||
+          item["status"]!.toLowerCase().contains(_searchText.toLowerCase());
     }).toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFF1A0B2E),
-      appBar: AppBar(
-        title: const Text("Notifications"),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _searchController,
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                hintText: "Search by title or status",
-                hintStyle: TextStyle(color: Colors.white54),
-                prefixIcon: const Icon(Icons.search, color: Colors.white54),
-                filled: true,
-                fillColor: Colors.white.withValues(alpha:0.1),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+      body: Row(
+        children: [
+          const AppSidebar(currentRoute: '/adminNotification'), // ✅ Sidebar
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF14002E), Color(0xFF0A0018)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
-              onChanged: (value) {
-                setState(() {
-                  _searchText = value;
-                });
-              },
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              "NOTIFICATIONS",
-              style: TextStyle(
-                color: Colors.white70,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.2,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredNotifications.length,
-                itemBuilder: (context, index) {
-                  final item = filteredNotifications[index];
-                  return Card(
-                    color: Colors.white.withValues(alpha:0.05),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        item["title"]!,
-                        style: const TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      trailing: Text(
-                        item["status"]!,
-                        style: const TextStyle(color: Colors.white70),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Notifications",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
-                  );
-                },
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _searchController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        hintText: "Search by title or status",
+                        hintStyle: const TextStyle(color: Colors.white54),
+                        prefixIcon:
+                        const Icon(Icons.search, color: Colors.white54),
+                        filled: true,
+                        fillColor: Colors.white.withOpacity (0.1),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          _searchText = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "NOTIFICATIONS",
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: filteredNotifications.length,
+                        itemBuilder: (context, index) {
+                          final item = filteredNotifications[index];
+                          return Card(
+                            color: Colors.white.withOpacity(0.05),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: ListTile(
+                              title: Text(
+                                item["title"]!,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              trailing: Text(
+                                item["status"]!,
+                                style: const TextStyle(color: Colors.white70),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
+

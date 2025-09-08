@@ -1,15 +1,14 @@
-
 import 'package:flutter/material.dart';
 import '../widgets/sidebar.dart';
 
-class AlertsPage extends StatefulWidget {
-  const AlertsPage({super.key});
+class AdminAlert extends StatefulWidget {
+  const AdminAlert({super.key});
 
   @override
-  State<AlertsPage> createState() => _AlertsPageState();
+  State<AdminAlert> createState() => _AdminAlertState();
 }
 
-class _AlertsPageState extends State<AlertsPage> {
+class _AdminAlertState extends State<AdminAlert> {
   final _titleController = TextEditingController();
   final _messageController = TextEditingController();
   final _locationController = TextEditingController();
@@ -21,8 +20,6 @@ class _AlertsPageState extends State<AlertsPage> {
         backgroundColor: Colors.green,
       ),
     );
-
-    // Clear fields after sending
     _titleController.clear();
     _messageController.clear();
     _locationController.clear();
@@ -33,14 +30,14 @@ class _AlertsPageState extends State<AlertsPage> {
     return Scaffold(
       body: Row(
         children: [
-          const AppSidebar(currentRoute: '/alerts'),
+          const AppSidebar(currentRoute: '/adminAlert'),
           Expanded(
             child: Center(
               child: Container(
                 constraints: const BoxConstraints(maxWidth: 400),
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha:0.3),
+                  color: Colors.black.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(

@@ -9,7 +9,7 @@ class AdminDashboard extends StatelessWidget {
     return Scaffold(
       body: Row(
         children: [
-          const AppSidebar(currentRoute: '/'),
+          const AppSidebar(currentRoute: '/adminDashboard'),
           Expanded(
             child: Stack(
               fit: StackFit.expand,
@@ -32,10 +32,26 @@ class AdminDashboard extends StatelessWidget {
                       spacing: 16,
                       runSpacing: 16,
                       children: const [
-                        _FeatureCard(icon: Icons.list_alt, title: 'Incidents', route: '/incidents'),
-                        _FeatureCard(icon: Icons.location_on, title: 'Incident Map', route: '/incident-map'),
-                        _FeatureCard(icon: Icons.warning_amber_rounded, title: 'Alerts', route: '/alerts'),
-                        _FeatureCard(icon: Icons.notifications, title: 'Notifications', route: '/notifications'),
+                        _FeatureCard(
+                          icon: Icons.list_alt,
+                          title: 'Incidents',
+                          route: '/incidentList',
+                        ),
+                        _FeatureCard(
+                          icon: Icons.location_on,
+                          title: 'Incident Map',
+                          route: '/incidentMap',
+                        ),
+                        _FeatureCard(
+                          icon: Icons.warning_amber_rounded,
+                          title: 'Alerts',
+                          route: '/adminAlert',
+                        ),
+                        _FeatureCard(
+                          icon: Icons.notifications,
+                          title: 'Notifications',
+                          route: '/adminNotification',
+                        ),
                       ],
                     ),
                   ),
@@ -53,7 +69,11 @@ class _FeatureCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String route;
-  const _FeatureCard({required this.icon, required this.title, required this.route});
+  const _FeatureCard({
+    required this.icon,
+    required this.title,
+    required this.route,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +92,13 @@ class _FeatureCard extends StatelessWidget {
           children: [
             Icon(icon, color: Colors.purpleAccent, size: 34),
             const SizedBox(height: 10),
-            Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
           ],
         ),
       ),

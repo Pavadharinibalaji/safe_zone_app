@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'login_page.dart';
 
 class RoleSelectionPage extends StatelessWidget {
   const RoleSelectionPage({super.key});
@@ -31,16 +32,14 @@ class RoleSelectionPage extends StatelessWidget {
                 const SizedBox(height: 40),
                 _roleButton(
                   context,
-                  'People Dashboard',
-                  '/peopleDashboard',
+                  'People',
                   Icons.people,
                   Colors.blue,
                 ),
                 const SizedBox(height: 20),
                 _roleButton(
                   context,
-                  'Admin Dashboard',
-                  '/adminDashboard',
+                  'Admin',
                   Icons.admin_panel_settings,
                   Colors.purple,
                 ),
@@ -57,7 +56,6 @@ class RoleSelectionPage extends StatelessWidget {
 Widget _roleButton(
     BuildContext context,
     String role,
-    String route,
     IconData icon,
     Color color,
     ) {
@@ -66,18 +64,11 @@ Widget _roleButton(
     height: 60,
     child: ElevatedButton.icon(
       onPressed: () {
-        // Add error handling for navigation
-        try {
-          Navigator.pushReplacementNamed(context, route);
-        } catch (e) {
-          // Show error if route doesn't exist
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error navigating to $role: Route not found'),
-              backgroundColor: Color.purple
-            ),
-          );
-        }
+        Navigator.pushNamed(
+          context,
+          '/login',
+          arguments: role, // Send role as String to match your onGenerateRoute
+        );
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: color,

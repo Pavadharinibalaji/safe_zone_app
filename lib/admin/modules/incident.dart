@@ -20,4 +20,28 @@ class Incident {
     this.status = 'Pending',
     this.severity = 'Medium',
   });
+
+  factory Incident.fromJson(Map<String, dynamic> json) => Incident(
+    id: json['id'],
+    title: json['title'],
+    description: json['description'],
+    location: json['location'],
+    reporter: json['reporter'],
+    lat: (json['lat'] as num).toDouble(),
+    lng: (json['lng'] as num).toDouble(),
+    status: json['status'],
+    severity: json['severity'],
+  );
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'title': title,
+    'description': description,
+    'location': location,
+    'reporter': reporter,
+    'lat': lat,
+    'lng': lng,
+    'status': status,
+    'severity': severity,
+  };
 }

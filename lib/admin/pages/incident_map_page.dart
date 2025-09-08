@@ -33,7 +33,7 @@ class _IncidentMapPageState extends State<IncidentMapPage> {
     return Scaffold(
       body: Row(
         children: [
-          const AppSidebar(currentRoute: '/incident-map'),
+          const AppSidebar(currentRoute: '/incidentMap'),
           Expanded(
             child: Stack(
               children: [
@@ -66,7 +66,7 @@ class _IncidentMapPageState extends State<IncidentMapPage> {
                                   boxShadow: [
                                     BoxShadow(
                                       // Fixed: Changed from withOpacity to withValues
-                                        color: _sevColor(inc.severity).withValues(alpha: 0.45),
+                                        color: _sevColor(inc.severity).withOpacity (0.45),
                                         blurRadius: 18,
                                         spreadRadius: 6
                                     ),

@@ -14,6 +14,7 @@ class _AppSidebarState extends State<AppSidebar> {
   @override
   Widget build(BuildContext context) {
     final width = expanded ? 220.0 : 72.0;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 220),
       width: width,
@@ -30,15 +31,18 @@ class _AppSidebarState extends State<AppSidebar> {
             Align(
               alignment: Alignment.centerRight,
               child: IconButton(
-                icon: Icon(expanded ? Icons.chevron_left : Icons.chevron_right, color: Colors.purpleAccent),
+                icon: Icon(
+                  expanded ? Icons.chevron_left : Icons.chevron_right,
+                  color: Colors.purpleAccent,
+                ),
                 onPressed: () => setState(() => expanded = !expanded),
               ),
             ),
-            _item(context, '/', Icons.home, 'Home'),
+            _item(context, '/adminDashboard', Icons.home, 'Home'),
             _item(context, '/incidents', Icons.list_alt, 'Incidents'),
-            _item(context, '/incident-map', Icons.location_on, 'Incident Map'),
-            _item(context, '/alerts', Icons.warning_amber_rounded, 'Alerts'),
-            _item(context, '/notifications', Icons.notifications, 'Notifications'),
+            _item(context, '/incidentMap', Icons.location_on, 'Incident Map'),
+            _item(context, '/adminAlert', Icons.warning_amber_rounded, 'Alerts'),
+            _item(context, '/adminNotification', Icons.notifications, 'Notifications'),
             const Spacer(),
           ],
         ),
@@ -48,6 +52,7 @@ class _AppSidebarState extends State<AppSidebar> {
 
   Widget _item(BuildContext context, String route, IconData icon, String label) {
     final sel = widget.currentRoute == route;
+
     return InkWell(
       onTap: () {
         if (ModalRoute.of(context)?.settings.name == route) return;
@@ -63,10 +68,22 @@ class _AppSidebarState extends State<AppSidebar> {
         child: Row(
           children: [
             const SizedBox(width: 16),
-            Icon(icon, color: sel ? Colors.white : Colors.purpleAccent, size: 22),
+            Icon(
+              icon,
+              color: sel ? Colors.white : Colors.purpleAccent,
+              size: 22,
+            ),
             if (expanded) ...[
               const SizedBox(width: 12),
-              Expanded(child: Text(label, style: TextStyle(color: sel ? Colors.white : Colors.white70, fontSize: 15))),
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    color: sel ? Colors.white : Colors.white70,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
             ],
           ],
         ),
